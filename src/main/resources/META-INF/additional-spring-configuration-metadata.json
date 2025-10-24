@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "public-sites.company-search-max-results",
+      "type": "java.lang.String",
+      "description": "Numero massimo di pubbliche amministrazione restituite da una ricerca sul public-sites-service."
+  }
+] }
