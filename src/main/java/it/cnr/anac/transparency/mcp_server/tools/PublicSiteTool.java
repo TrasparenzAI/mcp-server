@@ -22,6 +22,7 @@ import it.cnr.anac.transparency.mcp_server.clients.PublicSiteClient;
 import it.cnr.anac.transparency.mcp_server.dto.CompanyDto;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springaicommunity.mcp.annotation.McpProgressToken;
 import org.springaicommunity.mcp.annotation.McpTool;
 import org.springaicommunity.mcp.annotation.McpToolParam;
@@ -31,6 +32,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class PublicSiteTool {
@@ -66,6 +68,10 @@ public class PublicSiteTool {
                 .meta(Map.of())
                 .build());
 
+        log.debug("Call listCompanies with param with codiceCategoria: {}, codiceFiscaleEnte: {}" +
+                "codiceIpa: {}, denominazione: {}, comune: {} provincia: {}, regione: {}. Search Max Results: {}",
+                codiceCategoria, codiceFiscaleEnte, codiceIpa, denominazioneEnte,
+                comune, provincia, regione, companySearchMaxResults);
         return publicSiteClient.listCompanies(
                 codiceCategoria, codiceFiscaleEnte, codiceIpa, denominazioneEnte,
                 comune, provincia, idIpaFrom, withoutAddress, regione, null, companySearchMaxResults, null
