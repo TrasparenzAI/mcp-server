@@ -21,6 +21,7 @@ import io.modelcontextprotocol.spec.McpSchema;
 import it.cnr.anac.transparency.mcp_server.dto.ResultShowDto;
 import it.cnr.anac.transparency.mcp_server.services.ResultService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springaicommunity.mcp.annotation.McpProgressToken;
 import org.springaicommunity.mcp.annotation.McpTool;
 import org.springaicommunity.mcp.annotation.McpToolParam;
@@ -29,6 +30,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ResultTool {
@@ -43,12 +45,14 @@ public class ResultTool {
             @McpToolParam(description = "codice ipa amministrazione pubblica", required = true) String codiceIpa,
             @McpProgressToken String progressToken) {
 
+
         exchange.loggingNotification(McpSchema.LoggingMessageNotification.builder() // (3)
                 .level(McpSchema.LoggingLevel.DEBUG)
                 .data(String.format("Call lastResult with param with codiceIpa: %s", codiceIpa))
                 .meta(Map.of())
                 .build());
 
+        log.debug("Call lastResult with codiceIpa: {}", codiceIpa);
         return resultService.getLastResult(codiceIpa);
     }
 }
