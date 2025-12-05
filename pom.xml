@@ -5,31 +5,19 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.7</version>
+		<version>3.5.8</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>it.cnr.anac.transparency</groupId>
 	<artifactId>mcp-server</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>TrasparenzAI MCP Server</name>
 	<description>MCP Server per interagire con le informazioni di TrasparenzAI</description>
-	<url/>
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
 	<properties>
 		<java.version>25</java.version>
 		<spring-cloud.version>2025.0.0</spring-cloud.version>
-        <spring-ai.version>1.1.0-M3</spring-ai.version>
+        <spring-ai.version>1.1.0</spring-ai.version>
+        <jib.maven-plugin.version>3.5.1</jib.maven-plugin.version>
     </properties>
 	<dependencies>
 		<dependency>
@@ -48,7 +36,6 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
 		</dependency>
-        <!-- https://mvnrepository.com/artifact/org.springframework.ai/spring-ai-starter-mcp-server -->
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-starter-mcp-server</artifactId>
@@ -58,6 +45,10 @@
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-starter-mcp-server-webmvc</artifactId>
             <version>${spring-ai.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
         </dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -126,6 +117,13 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>build-info</goal>
+                        </goals>
+                    </execution>
+                </executions>
 				<configuration>
 					<excludes>
 						<exclude>
@@ -135,6 +133,18 @@
 					</excludes>
 				</configuration>
 			</plugin>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>${jib.maven-plugin.version}</version>
+                <configuration>
+                    <from><image>eclipse-temurin:25-jre-alpine@sha256:cc3d9afe97719b612e15d09c048f86e104889816232c233e96c3a35cc5c551ee</image></from>
+                    <container>
+                        <creationTime>USE_CURRENT_TIMESTAMP</creationTime>
+                        <mainClass>it.cnr.anac.transparency.mcp_server.TrasparenzAiMcpServerApplication</mainClass>
+                    </container>
+                </configuration>
+            </plugin>
 		</plugins>
 	</build>
 </project>
