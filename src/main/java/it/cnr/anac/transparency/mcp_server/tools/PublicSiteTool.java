@@ -21,6 +21,7 @@ import io.modelcontextprotocol.spec.McpSchema;
 import it.cnr.anac.transparency.mcp_server.clients.PublicSiteClient;
 import it.cnr.anac.transparency.mcp_server.dto.CompanyDto;
 
+import it.cnr.anac.transparency.mcp_server.dto.PageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springaicommunity.mcp.annotation.McpProgressToken;
@@ -28,8 +29,6 @@ import org.springaicommunity.mcp.annotation.McpTool;
 import org.springaicommunity.mcp.annotation.McpToolParam;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -37,25 +36,29 @@ import java.util.Map;
 @Service
 public class PublicSiteTool {
 
-    @Value("${public-sites.company-search-max-results}")
+    @Value("${public-sites.company-search-max-results:100}")
     Integer companySearchMaxResults;
 
     private final PublicSiteClient publicSiteClient;
 
     @McpTool(description = "Ricerca una pubblica amministrazione (PA) attraverso alcune informazioni " +
             "disponibili nell'Indice delle PA (IPA). E' possibile fornire opzionalmente alcuni " +
-            "parametri per filtrare le pubbliche amministrazioni fornite.")
-    public List<CompanyDto> listCompanies(
+            "parametri per filtrare le pubbliche amministrazioni fornite." +
+            "I Risultati sono paginati, puoi usare il parametro page per ottenere le pagine diverse" +
+            "dalla prima e scorrere così tutti i risultati." +
+            "Nella risposta puoi trovare il numero di risultati totali e il numero di pagine totali.")
+    public PageResponse<CompanyDto> listCompanies(
             McpSyncServerExchange exchange,
             @McpToolParam(description = "codice categoria IPA dell'ente", required = false) String codiceCategoria,
             @McpToolParam(description = "codice fiscale", required = false) String codiceFiscaleEnte,
             @McpToolParam(description = "codice ipa", required = false) String codiceIpa,
-            @McpToolParam(description = "denominazione ente", required = false) String denominazioneEnte,
+            @McpToolParam(description = "denominazione ente - descrizione ente", required = false) String denominazioneEnte,
             @McpToolParam(description = "comune", required = false) String comune,
             @McpToolParam(description = "provincia", required = false) String provincia,
             @McpToolParam(description = "id ipa from", required = false) Long idIpaFrom,
             @McpToolParam(description = "senza indirizzo", required = false) Boolean withoutAddress,
             @McpToolParam(description = "regione", required = false) String regione,
+            @McpToolParam(description = "page - la pagina di risultati da ottenere", required = false) Integer page,
             @McpProgressToken String progressToken) {
 
         exchange.loggingNotification(McpSchema.LoggingMessageNotification.builder() // (3)
@@ -74,7 +77,7 @@ public class PublicSiteTool {
                 comune, provincia, regione, companySearchMaxResults);
         return publicSiteClient.listCompanies(
                 codiceCategoria, codiceFiscaleEnte, codiceIpa, denominazioneEnte,
-                comune, provincia, idIpaFrom, withoutAddress, regione, null, companySearchMaxResults, null
-        ).content();
+                comune, provincia, idIpaFrom, withoutAddress, regione, page, companySearchMaxResults, null
+        );
     }
 }
