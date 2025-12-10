@@ -36,4 +36,29 @@ public record PageResponse<T>(
     Boolean first,
     Boolean last,
     Integer numberOfElements
-) {}
+) {
+
+    /**
+     * Crea una {@code PageResponse} vuota con:
+     * - contenuti: lista vuota
+     * - numero pagina: 0
+     * - size: 0
+     * - totalElements: 0
+     * - totalPages: 1
+     * - first: true (prima pagina)
+     * - last: true (ultima pagina)
+     * - numberOfElements: 0
+     */
+    public static <T> PageResponse<T> empty() {
+        return new PageResponse<>(
+            List.of(),
+            0,
+            0,
+            0L,
+            1,
+            true,
+            true,
+            0
+        );
+    }
+}

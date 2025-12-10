@@ -18,6 +18,7 @@ package it.cnr.anac.transparency.mcp_server.tools;
 
 import io.modelcontextprotocol.server.McpSyncServerExchange;
 import io.modelcontextprotocol.spec.McpSchema;
+import it.cnr.anac.transparency.mcp_server.dto.PageResponse;
 import it.cnr.anac.transparency.mcp_server.dto.ResultShowDto;
 import it.cnr.anac.transparency.mcp_server.services.ResultService;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +27,6 @@ import org.springaicommunity.mcp.annotation.McpProgressToken;
 import org.springaicommunity.mcp.annotation.McpTool;
 import org.springaicommunity.mcp.annotation.McpToolParam;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -39,12 +38,15 @@ public class ResultTool {
 
     @McpTool(description = "Fornisce le informazioni sui risultati dei controlli effettuati dalla " +
             "piattaforma TrasparenzAI relativamente alla sezione Amministrazione trasparente di una pubblica " +
-            "amministrazione, come previsto dal DECRETO LEGISLATIVO 14 marzo 2013, n. 33. ")
-    public List<ResultShowDto> lastResults(
+            "amministrazione, come previsto dal DECRETO LEGISLATIVO 14 marzo 2013, n. 33. " +
+            "I Risultati sono paginati, puoi usare il parametro page per ottenere le pagine diverse" +
+            "dalla prima e scorrere così tutti i risultati." +
+            "Nella risposta puoi trovare il numero di risultati totali e il numero di pagine totali.")
+    public PageResponse<ResultShowDto> lastResults(
             McpSyncServerExchange exchange,
-            @McpToolParam(description = "codice ipa amministrazione pubblica", required = true) String codiceIpa,
+            @McpToolParam(description = "codice ipa amministrazione pubblica") String codiceIpa,
+            @McpToolParam(description = "page - la pagina di risultati da ottenere", required = false) Integer page,
             @McpProgressToken String progressToken) {
-
 
         exchange.loggingNotification(McpSchema.LoggingMessageNotification.builder() // (3)
                 .level(McpSchema.LoggingLevel.DEBUG)
@@ -53,6 +55,6 @@ public class ResultTool {
                 .build());
 
         log.debug("Call lastResult with codiceIpa: {}", codiceIpa);
-        return resultService.getLastResult(codiceIpa);
+        return resultService.getLastResult(codiceIpa, page);
     }
 }

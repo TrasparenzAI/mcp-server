@@ -17,11 +17,12 @@
 package it.cnr.anac.transparency.mcp_server.services;
 
 import it.cnr.anac.transparency.mcp_server.clients.ResultServiceClient;
+import it.cnr.anac.transparency.mcp_server.dto.PageResponse;
 import it.cnr.anac.transparency.mcp_server.dto.ResultShowDto;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -30,13 +31,16 @@ public class ResultService {
     private final ConductorService conductorService;
     private final ResultServiceClient resultServiceClient;
 
-    public List<ResultShowDto> getLastResult(String codiceIpa) {
+    @Value("${result-service.max-results}")
+    Integer maxResults;
+
+    public PageResponse<ResultShowDto> getLastResult(String codiceIpa, Integer page) {
         val lastWorkflow = conductorService.getLastWorkflow(codiceIpa);
         if (lastWorkflow.isEmpty()) {
-            return List.of();
+            return PageResponse.empty();
         }
         return resultServiceClient.listByCodiceIpa(
                 codiceIpa,lastWorkflow.get().workflowId(), false,
-                null, null, null).content();
+                page, maxResults, null);
     }
 }
