@@ -35,12 +35,8 @@ public class ResultService {
     Integer maxResults;
 
     public PageResponse<ResultShowDto> getLastResult(String codiceIpa, Integer page) {
-        val lastWorkflow = conductorService.getLastWorkflow(codiceIpa);
-        if (lastWorkflow.isEmpty()) {
-            return PageResponse.empty();
-        }
         return resultServiceClient.listByCodiceIpa(
-                codiceIpa,lastWorkflow.get().workflowId(), false,
+                codiceIpa,false,
                 page, maxResults, null);
     }
 }

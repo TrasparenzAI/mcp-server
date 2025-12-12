@@ -119,7 +119,6 @@ public interface ResultServiceClient {
     @GetMapping(path = "/v1/results/codiceipa")
     PageResponse<ResultShowDto> listByCodiceIpa(
             @RequestParam("codiceIpa") String codiceIpa,
-            @RequestParam("workflowId") String workflowId,
             @RequestParam(value = "noCache", required = false) Boolean noCache,
             // Pageable flattened
             @RequestParam(value = "page") Integer page,

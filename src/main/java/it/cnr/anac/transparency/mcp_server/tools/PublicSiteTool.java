@@ -41,7 +41,8 @@ public class PublicSiteTool {
 
     private final PublicSiteClient publicSiteClient;
 
-    @McpTool(description = "Ricerca una pubblica amministrazione (PA) attraverso alcune informazioni " +
+    @McpTool(name = "Elenco delle Pubbliche Amministrazioni",
+            description = "Ricerca una pubblica amministrazione (PA) attraverso alcune informazioni " +
             "disponibili nell'Indice delle PA (IPA). E' possibile fornire opzionalmente alcuni " +
             "parametri per filtrare le pubbliche amministrazioni fornite." +
             "I Risultati sono paginati, puoi usare il parametro page per ottenere le pagine diverse" +
@@ -71,7 +72,7 @@ public class PublicSiteTool {
                 .meta(Map.of())
                 .build());
 
-        log.debug("Call listCompanies with param with codiceCategoria: {}, codiceFiscaleEnte: {}" +
+        log.info("Call listCompanies with param with codiceCategoria: {}, codiceFiscaleEnte: {}" +
                 "codiceIpa: {}, denominazione: {}, comune: {} provincia: {}, regione: {}. Search Max Results: {}",
                 codiceCategoria, codiceFiscaleEnte, codiceIpa, denominazioneEnte,
                 comune, provincia, regione, companySearchMaxResults);

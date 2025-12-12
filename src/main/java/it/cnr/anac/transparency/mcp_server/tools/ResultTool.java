@@ -36,11 +36,14 @@ public class ResultTool {
 
     private final ResultService resultService;
 
-    @McpTool(description = "Fornisce le informazioni sui risultati dei controlli effettuati dalla " +
+    @McpTool(name = "Ultimi risultati controllo trasparenza",
+            description = "Fornisce le informazioni sui risultati dei controlli effettuati dalla " +
             "piattaforma TrasparenzAI relativamente alla sezione Amministrazione trasparente di una pubblica " +
             "amministrazione, come previsto dal DECRETO LEGISLATIVO 14 marzo 2013, n. 33. " +
+            "Puoi trovare con questo tool le informazioni sulla trasparenza di una pubblica amministrazione. " +
             "I Risultati sono paginati, puoi usare il parametro page per ottenere le pagine diverse" +
-            "dalla prima e scorrere così tutti i risultati." +
+            "dalla pagina zero (quella iniziale) e scorrere così tutti i risultati." +
+            "Usa il parametro page diverso da 0 solo se hai già effettuato una chiamata con page = 0. " +
             "Nella risposta puoi trovare il numero di risultati totali e il numero di pagine totali.")
     public PageResponse<ResultShowDto> lastResults(
             McpSyncServerExchange exchange,
@@ -54,7 +57,9 @@ public class ResultTool {
                 .meta(Map.of())
                 .build());
 
-        log.debug("Call lastResult with codiceIpa: {}", codiceIpa);
-        return resultService.getLastResult(codiceIpa, page);
+        PageResponse<ResultShowDto> results = resultService.getLastResult(codiceIpa, page);
+        log.info("Call lastResult with codiceIpa: {}, page: {}, found {} results",
+                codiceIpa, page, results.numberOfElements());
+        return results;
     }
 }
