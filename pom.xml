@@ -21,6 +21,8 @@
         <mapstruct.version>1.6.2</mapstruct.version>
         <!-- Explicit Mockito version used for Java agent configuration in tests -->
         <mockito.version>5.18.0</mockito.version>
+        <!-- Ensure ${argLine} is defined to avoid literal placeholder issues in Surefire -->
+        <argLine/>
     </properties>
 	<dependencies>
 		<dependency>
@@ -174,7 +176,7 @@
                 <version>3.5.0</version>
                 <configuration>
                     <!-- Preserve any other argLine contributions (e.g. from Jacoco) and add Mockito as agent -->
-                    <argLine>@{argLine} -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar</argLine>
+                    <argLine>${argLine} -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar</argLine>
                 </configuration>
             </plugin>
             <plugin>
