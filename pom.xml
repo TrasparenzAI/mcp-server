@@ -13,11 +13,14 @@
 	<version>0.0.1</version>
 	<name>TrasparenzAI MCP Server</name>
 	<description>MCP Server per interagire con le informazioni di TrasparenzAI</description>
-	<properties>
-		<java.version>25</java.version>
-		<spring-cloud.version>2025.0.0</spring-cloud.version>
+ <properties>
+        <java.version>25</java.version>
+        <spring-cloud.version>2025.0.0</spring-cloud.version>
         <spring-ai.version>1.1.0</spring-ai.version>
         <jib.maven-plugin.version>3.5.1</jib.maven-plugin.version>
+        <mapstruct.version>1.6.2</mapstruct.version>
+        <!-- Explicit Mockito version used for Java agent configuration in tests -->
+        <mockito.version>5.18.0</mockito.version>
     </properties>
 	<dependencies>
 		<dependency>
@@ -84,12 +87,25 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- Ensure a consistent Mockito version available for the Java agent -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- MapStruct for DTO mapping -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${mapstruct.version}</version>
+        </dependency>
+    </dependencies>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -124,12 +140,17 @@
 							<groupId>org.springframework.boot</groupId>
 							<artifactId>spring-boot-configuration-processor</artifactId>
 						</path>
+						<path>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct-processor</artifactId>
+							<version>${mapstruct.version}</version>
+						</path>
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
                 <executions>
                     <execution>
                         <goals>
@@ -137,15 +158,25 @@
                         </goals>
                     </execution>
                 </executions>
-				<configuration>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <!-- Run Mockito as a Java agent during tests to avoid dynamic attachment warnings on JDK 25+ -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.0</version>
+                <configuration>
+                    <!-- Preserve any other argLine contributions (e.g. from Jacoco) and add Mockito as agent -->
+                    <argLine>@{argLine} -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar</argLine>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
@@ -158,6 +189,6 @@
                     </container>
                 </configuration>
             </plugin>
-		</plugins>
-	</build>
+        </plugins>
+    </build>
 </project>

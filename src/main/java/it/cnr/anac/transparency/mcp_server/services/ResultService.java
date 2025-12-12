@@ -19,6 +19,9 @@ package it.cnr.anac.transparency.mcp_server.services;
 import it.cnr.anac.transparency.mcp_server.clients.ResultServiceClient;
 import it.cnr.anac.transparency.mcp_server.dto.PageResponse;
 import it.cnr.anac.transparency.mcp_server.dto.ResultShowDto;
+import it.cnr.anac.transparency.mcp_server.dto.RispostaPaginata;
+import it.cnr.anac.transparency.mcp_server.dto.RisultatoValidazioneRegola;
+import it.cnr.anac.transparency.mcp_server.mapper.DtoMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,13 +33,15 @@ public class ResultService {
 
     private final ConductorService conductorService;
     private final ResultServiceClient resultServiceClient;
+    private final DtoMapper dtoMapper;
 
     @Value("${result-service.max-results}")
     Integer maxResults;
 
-    public PageResponse<ResultShowDto> getLastResult(String codiceIpa, Integer page) {
-        return resultServiceClient.listByCodiceIpa(
-                codiceIpa,false,
+    public RispostaPaginata<RisultatoValidazioneRegola> getLastResult(String codiceIpa, Integer page) {
+        PageResponse<ResultShowDto> response = resultServiceClient.listByCodiceIpa(
+                codiceIpa, false,
                 page, maxResults, null);
+        return dtoMapper.toRispostaPaginata(response);
     }
 }

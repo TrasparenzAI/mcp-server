@@ -76,9 +76,12 @@ public class PublicSiteTool {
                 "codiceIpa: {}, denominazione: {}, comune: {} provincia: {}, regione: {}. Search Max Results: {}",
                 codiceCategoria, codiceFiscaleEnte, codiceIpa, denominazioneEnte,
                 comune, provincia, regione, companySearchMaxResults);
-        return publicSiteClient.listCompanies(
+
+        PageResponse<CompanyDto> results = publicSiteClient.listCompanies(
                 codiceCategoria, codiceFiscaleEnte, codiceIpa, denominazioneEnte,
                 comune, provincia, idIpaFrom, withoutAddress, regione, page, companySearchMaxResults, null
         );
+        log.info("Trovate {} pubbliche amministrazioni", results.totalElements());
+        return results;
     }
 }

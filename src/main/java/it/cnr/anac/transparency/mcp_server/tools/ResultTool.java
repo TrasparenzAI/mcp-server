@@ -18,8 +18,8 @@ package it.cnr.anac.transparency.mcp_server.tools;
 
 import io.modelcontextprotocol.server.McpSyncServerExchange;
 import io.modelcontextprotocol.spec.McpSchema;
-import it.cnr.anac.transparency.mcp_server.dto.PageResponse;
-import it.cnr.anac.transparency.mcp_server.dto.ResultShowDto;
+import it.cnr.anac.transparency.mcp_server.dto.RispostaPaginata;
+import it.cnr.anac.transparency.mcp_server.dto.RisultatoValidazioneRegola;
 import it.cnr.anac.transparency.mcp_server.services.ResultService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +45,7 @@ public class ResultTool {
             "dalla pagina zero (quella iniziale) e scorrere così tutti i risultati." +
             "Usa il parametro page diverso da 0 solo se hai già effettuato una chiamata con page = 0. " +
             "Nella risposta puoi trovare il numero di risultati totali e il numero di pagine totali.")
-    public PageResponse<ResultShowDto> lastResults(
+    public RispostaPaginata<RisultatoValidazioneRegola> lastResults(
             McpSyncServerExchange exchange,
             @McpToolParam(description = "codice ipa amministrazione pubblica") String codiceIpa,
             @McpToolParam(description = "page - la pagina di risultati da ottenere", required = false) Integer page,
@@ -57,9 +57,9 @@ public class ResultTool {
                 .meta(Map.of())
                 .build());
 
-        PageResponse<ResultShowDto> results = resultService.getLastResult(codiceIpa, page);
-        log.info("Call lastResult with codiceIpa: {}, page: {}, found {} results",
-                codiceIpa, page, results.numberOfElements());
+        RispostaPaginata<RisultatoValidazioneRegola> results = resultService.getLastResult(codiceIpa, page);
+        log.info("Call lastResult with codiceIpa: {}, page: {}, found {} elementi",
+                codiceIpa, page, results.numeroDiElementi());
         return results;
     }
 }
