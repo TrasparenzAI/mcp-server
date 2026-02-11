@@ -10,13 +10,13 @@
 	</parent>
 	<groupId>it.cnr.anac.transparency</groupId>
 	<artifactId>mcp-server</artifactId>
-	<version>0.1.0</version>
+	<version>0.1.1</version>
 	<name>TrasparenzAI MCP Server</name>
 	<description>MCP Server per interagire con le informazioni di TrasparenzAI</description>
  <properties>
         <java.version>25</java.version>
         <spring-cloud.version>2025.0.0</spring-cloud.version>
-        <spring-ai.version>1.1.0</spring-ai.version>
+        <spring-ai.version>1.1.2</spring-ai.version>
         <jib.maven-plugin.version>3.5.1</jib.maven-plugin.version>
         <mapstruct.version>1.6.2</mapstruct.version>
         <!-- Explicit Mockito version used for Java agent configuration in tests -->
