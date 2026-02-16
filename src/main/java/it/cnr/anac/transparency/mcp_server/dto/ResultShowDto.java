@@ -30,7 +30,6 @@ public record ResultShowDto(
     String term,
     String content,
     Integer status,
-    Double score,
     String workflowId,
     String workflowChildId,
     String errorMessage,

@@ -30,7 +30,6 @@ public interface DtoMapper {
     @Mapping(target = "termine", source = "term")
     @Mapping(target = "contenuto", source = "content")
     @Mapping(target = "stato", source = "status")
-    @Mapping(target = "punteggio", source = "score")
     @Mapping(target = "workflowId", source = "workflowId")
     @Mapping(target = "messaggioDiErrore", source = "errorMessage")
     @Mapping(target = "dataUltimoAggiornamento", source = "updatedAt")
