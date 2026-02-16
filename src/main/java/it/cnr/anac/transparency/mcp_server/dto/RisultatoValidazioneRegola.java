@@ -7,7 +7,6 @@ public record RisultatoValidazioneRegola(
         String termine,
         String contenuto,
         Integer stato,
-        Double punteggio,
         String workflowId,
         String messaggioDiErrore,
         String dataUltimoAggiornamento,

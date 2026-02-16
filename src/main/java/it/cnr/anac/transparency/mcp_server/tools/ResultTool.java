@@ -73,7 +73,6 @@ public class ResultTool {
                             + "- titolo: termine (oppure contenuto)\n"
                             + "- nomeRegola\n"
                             + "- stato (es. 200=OK, 202=accettato/da verificare, 404=mancante)\n"
-                            + "- punteggio (se presente)\n"
                             + "- dataUltimoAggiornamento\n"
                             + "- link: preferisci urlDestinazione; in alternativa urlEffettivo\n"
                             + "- se messaggioDiErrore non è null, includilo."
