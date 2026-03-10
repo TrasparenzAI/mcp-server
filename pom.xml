@@ -21,6 +21,9 @@
         <mapstruct.version>1.6.2</mapstruct.version>
         <!-- Explicit Mockito version used for Java agent configuration in tests -->
         <mockito.version>5.18.0</mockito.version>
+        <!-- Ensure UTF-8 is used everywhere to avoid resource filtering encoding issues -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- Ensure ${argLine} is defined to avoid literal placeholder issues in Surefire -->
         <argLine/>
     </properties>
