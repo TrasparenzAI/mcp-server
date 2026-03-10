@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Consiglio Nazionale delle Ricerche
+ * Copyright (C) 2026 Consiglio Nazionale delle Ricerche
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU Affero General Public License as
@@ -18,6 +18,7 @@ package it.cnr.anac.transparency.mcp_server.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Data;
 
 import java.util.List;
 
@@ -25,14 +26,15 @@ import java.util.List;
  * Rappresenta una pagina di risultati con i nomi dei campi tradotti in Italiano.
  * Campi aggiuntivi eventuali verranno ignorati.
  */
+@Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record RispostaPaginata<T>(
-    List<T> contenuto,
-    Integer numeroDiPagina,
-    Integer dimensioneDellaPagina,
-    Long elementiTotali,
-    Integer pagineTotali,
-    Integer numeroDiElementi
-) {
+public class RispostaPaginata<T> {
+    private List<T> contenuto;
+    private Integer numeroDiPagina;
+    private Integer dimensioneDellaPagina;
+    private Long elementiTotali;
+    private Integer pagineTotali;
+    private Integer numeroDiElementi;
+    private String resoconto;
 }
