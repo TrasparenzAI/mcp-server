@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>it.cnr.anac.transparency</groupId>
 	<artifactId>mcp-server</artifactId>
-	<version>0.2.1</version>
+	<version>0.2.2</version>
 	<name>TrasparenzAI MCP Server</name>
 	<description>MCP Server per interagire con le informazioni di TrasparenzAI</description>
  <properties>
