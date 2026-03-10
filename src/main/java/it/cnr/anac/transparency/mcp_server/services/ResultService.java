@@ -42,6 +42,33 @@ public class ResultService {
         PageResponse<ResultShowDto> response = resultServiceClient.listByCodiceIpa(
                 codiceIpa, false,
                 page, maxResults, null);
-        return dtoMapper.toRispostaPaginata(response);
+        val result = dtoMapper.toRispostaPaginata(response);
+        result.setResoconto(getResoconto(result));
+        return result;
+    }
+
+
+    private String getResoconto(RispostaPaginata<RisultatoValidazioneRegola> results) {
+        long validResults = 0;
+        long notFoundResults = 0;
+        long otherResults = 0;
+        for (RisultatoValidazioneRegola r : results.getContenuto()) {
+            if (r.stato() >= 200 && r.stato() <=299) {
+                validResults = validResults++;
+            }
+            else if (r.stato() >= 400 && r.stato() <=499) {
+                notFoundResults = notFoundResults++;
+            } else {
+                otherResults = otherResults++;
+            }
+        };
+        String resoconto = String.format("In questa sono contenuti %d risultati di validazione. " +
+                "Di questi risultati %d hanno uno stato valido (per esempio 200, 201,202) " +
+                "e %d risultati con stato non trovato (per esempio 404).",
+                results.getDimensioneDellaPagina(), validResults, notFoundResults);
+        if (otherResults > 0) {
+            resoconto = resoconto + String.format(" Inoltre sono presenti %d risultati con stato maggiore o uguale a 500.", otherResults);
+        }
+        return resoconto;
     }
 }

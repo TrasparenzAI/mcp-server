@@ -72,7 +72,7 @@ public class ResultTool {
                             + "CONTENUTO DI OGNI BULLET (quando disponibile):\n"
                             + "- titolo: termine (oppure contenuto)\n"
                             + "- nomeRegola\n"
-                            + "- stato (es. 200=OK, 202=accettato/da verificare, 404=mancante)\n"
+                            + "- stato (es. 200=OK, 202=OK, 404=mancante)\n"
                             + "- dataUltimoAggiornamento\n"
                             + "- link: preferisci urlDestinazione; in alternativa urlEffettivo\n"
                             + "- se messaggioDiErrore non è null, includilo."
@@ -96,7 +96,8 @@ public class ResultTool {
 
         RispostaPaginata<RisultatoValidazioneRegola> results = resultService.getLastResult(codiceIpa, page);
         log.info("Call lastResult with codiceIpa: {}, page: {}, found {} elementi",
-                codiceIpa, page, results.numeroDiElementi());
+                codiceIpa, page, results.getNumeroDiElementi());
         return results;
     }
+
 }
