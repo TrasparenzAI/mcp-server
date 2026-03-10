@@ -17,23 +17,17 @@
 package it.cnr.anac.transparency.mcp_server.tools;
 
 import org.springaicommunity.mcp.annotation.McpResource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DocResource {
 
+    @Value("${mcp.documentation}")
+    String MCP_DOCUMENTATION;
+
     @McpResource(uri = "mcp://docs/manuale-integrazione.md", name = "Manuale Tecnico Tool TrasparenzAI")
     public String getManual() {
-        return """
-            # Linee Guida per l'uso dei Tool di questo MCP Server
-            - Utilizza il tool 'Ultimi risultati controllo trasparenza' solo dopo aver prelevato il codiceIpa della pubblica amministrazione.
-            - Utilizza il tool 'Elenco delle Pubbliche Amministrazioni' sia cerca il codiceIpa di una singola amministrazione
-              che per ottenere un elenco di pubbliche amministrazioni (con i relativi codiciIpa)
-            - Utilizza 'Elenco delle Pubbliche Amministrazioni' anche per cerca la lista delle pubbliche amministrazione che appartengono
-              a un comune, provincia o regione.
-            - Nei risultati ottenuti dal tool 'Ultimi risultati controllo trasparenza' considera come validi sia lo stato 200 che 201 e 202. 
-            - Nei risultati ottenuti dal tool 'Ultimi risultati controllo trasparenza' lo stato 202 significa che la sezione della trasparenza
-              è stata individuata ma con un testo alternativo, considera comunque lo stato 202 come valido.
-            """;
+        return MCP_DOCUMENTATION;
     }
 }

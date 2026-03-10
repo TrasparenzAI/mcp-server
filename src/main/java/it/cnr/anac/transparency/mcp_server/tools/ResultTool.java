@@ -41,7 +41,9 @@ public class ResultTool {
             name = "Ultimi risultati controllo trasparenza",
             description =
                     "Recupera i risultati (paginati) dei controlli TrasparenzAI per la sezione 'Amministrazione trasparente' "
-                            + "di una pubblica amministrazione (PA) identificata da codice IPA, in attuazione del D.Lgs. 33/2013.\n\n"
+                            + "di una pubblica amministrazione (PA) identificata da codice IPA, in attuazione del D.Lgs. 33/2013.\n"
+                            + "IMPORTANTE: Prima di invocare, consulta le regole di validazione degli stati (200, 201, 202)\n"
+                            + "nella risorsa mcp://docs/manuale-integrazione.md\n\n"
 
                             + "QUANDO INVOCARLO (trigger): invoca SEMPRE questo tool quando l’utente chiede "
                             + "\"ultimi risultati\", \"esiti\", \"risultati controlli\", \"report trasparenza\" o informazioni "
@@ -75,7 +77,11 @@ public class ResultTool {
                             + "- stato (es. 200=OK, 202=OK, 404=mancante)\n"
                             + "- dataUltimoAggiornamento\n"
                             + "- link: preferisci urlDestinazione; in alternativa urlEffettivo\n"
-                            + "- se messaggioDiErrore non è null, includilo."
+                            + "- se messaggioDiErrore non è null, includilo.\n\n"
+
+                            + "Fai attenzione che lo stato 202 corrisponde a OK, quindi a informazioni pubblicate correttamente.\n"
+                            + "RIPETO: lo stato 202 corrisponde a OK, quindi a informazioni pubblicate correttamente. "
+                            + "Lo stato 202 indica che il testo riportato nella sezione è un testo alternativa valido "
     )
     public RispostaPaginata<RisultatoValidazioneRegola> lastResults(
             McpSyncServerExchange exchange,
@@ -95,8 +101,8 @@ public class ResultTool {
                 .build());
 
         RispostaPaginata<RisultatoValidazioneRegola> results = resultService.getLastResult(codiceIpa, page);
-        log.info("Call lastResult with codiceIpa: {}, page: {}, found {} elementi",
-                codiceIpa, page, results.getNumeroDiElementi());
+        log.info("Call lastResult with codiceIpa: {}, page: {}, found {} elementi. Recap: {}",
+                codiceIpa, page, results.getNumeroDiElementi(), results.getResoconto());
         return results;
     }
 
