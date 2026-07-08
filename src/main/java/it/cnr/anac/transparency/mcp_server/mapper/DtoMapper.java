@@ -38,10 +38,11 @@ public interface DtoMapper {
 
     // PageResponse<ResultShowDto> -> RispostaPaginata<RisultatoValidazioneRegola>
     @Mapping(target = "contenuto", source = "content")
-    @Mapping(target = "numeroDiPagina", source = "number")
-    @Mapping(target = "dimensioneDellaPagina", source = "size")
-    @Mapping(target = "elementiTotali", source = "totalElements")
-    @Mapping(target = "pagineTotali", source = "totalPages")
-    @Mapping(target = "numeroDiElementi", source = "numberOfElements")
+    @Mapping(target = "numeroDiPagina", source = "page.number")
+    @Mapping(target = "dimensioneDellaPagina", source = "page.size")
+    @Mapping(target = "elementiTotali", source = "page.totalElements")
+    @Mapping(target = "pagineTotali", source = "page.totalPages")
+    @Mapping(target = "numeroDiElementi", expression = "java(source.content() != null ? source.content().size() : null)")
+    @Mapping(target = "resoconto", ignore = true)
     RispostaPaginata<RisultatoValidazioneRegola> toRispostaPaginata(PageResponse<ResultShowDto> source);
 }

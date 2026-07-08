@@ -22,21 +22,24 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
 
 /**
- * Rappresenta una pagina di risultati come comunemente restituita dai servizi Spring.
+ * Rappresenta una pagina di risultati nel formato attuale dei servizi Spring
+ * (content + oggetto "page" annidato con size/number/totalElements/totalPages).
  * Campi aggiuntivi eventuali verranno ignorati.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record PageResponse<T>(
-    List<T> content,
-    Integer number,
-    Integer size,
-    Long totalElements,
-    Integer totalPages,
-    Boolean first,
-    Boolean last,
-    Integer numberOfElements
+        List<T> content,
+        PageInfo page
 ) {
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record PageInfo(
+            Integer size,
+            Integer number,
+            Long totalElements,
+            Integer totalPages
+    ) {}
 
     /**
      * Crea una {@code PageResponse} vuota con:
@@ -45,20 +48,11 @@ public record PageResponse<T>(
      * - size: 0
      * - totalElements: 0
      * - totalPages: 1
-     * - first: true (prima pagina)
-     * - last: true (ultima pagina)
-     * - numberOfElements: 0
      */
     public static <T> PageResponse<T> empty() {
         return new PageResponse<>(
-            List.of(),
-            0,
-            0,
-            0L,
-            1,
-            true,
-            true,
-            0
+                List.of(),
+                new PageInfo(0, 0, 0L, 1)
         );
     }
 }

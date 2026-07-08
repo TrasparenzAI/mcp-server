@@ -140,4 +140,11 @@ public interface ResultServiceClient {
             @RequestParam(value = "createdAfter", required = false) String createdAfter,
             @RequestParam(value = "sort") List<String> sort
     );
+
+    @GetMapping(path = "/v1/workflows")
+    PageResponse<WorkflowDto> listWorkflow(
+            @RequestParam(value = "workflowId", required = false) String workflowId,
+            @RequestParam(value = "codiceIpa", required = false) String codiceIpa,
+            @RequestParam(value = "status", required = false) Integer status
+    );
 }

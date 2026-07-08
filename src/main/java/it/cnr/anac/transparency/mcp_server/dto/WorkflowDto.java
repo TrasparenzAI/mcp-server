@@ -29,6 +29,8 @@ public record WorkflowDto(
         @JsonDeserialize(using = TimestampToLocalDateTimeDeserializer.class) // <-- AGGIUNGI QUESTO
         LocalDateTime updateTime, // epoch millis, e.g., 1761213641329
         String status, /* "COMPLETED" */
+        String codiceIpa,
+        String rootRule,
         @JsonDeserialize(using = TimestampToLocalDateTimeDeserializer.class) // <-- AGGIUNGI QUESTO
         LocalDateTime endTime, // epoch millis, e.g., 1761252944000
         String workflowId // "328b5403-5fb3-4351-8b6e-692abcb5b3c8"

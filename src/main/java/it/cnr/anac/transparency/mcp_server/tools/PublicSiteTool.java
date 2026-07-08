@@ -41,7 +41,7 @@ public class PublicSiteTool {
 
     private final PublicSiteClient publicSiteClient;
 
-    @McpTool(name = "Elenco delle Pubbliche Amministrazioni",
+    @McpTool(name = "elenco-delle-pubbliche-amministrazioni",
             description = "Ricerca una pubblica amministrazione (PA) attraverso alcune informazioni " +
             "disponibili nell'Indice delle PA (IPA). E' possibile fornire opzionalmente alcuni " +
             "parametri per filtrare le pubbliche amministrazioni fornite." +
@@ -81,7 +81,7 @@ public class PublicSiteTool {
                 codiceCategoria, codiceFiscaleEnte, codiceIpa, denominazioneEnte,
                 comune, provincia, idIpaFrom, withoutAddress, regione, page, companySearchMaxResults, null
         );
-        log.info("Trovate {} pubbliche amministrazioni", results.totalElements());
+        log.info("Trovate {} pubbliche amministrazioni", results.page().totalElements());
         return results;
     }
 }

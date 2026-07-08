@@ -17,6 +17,7 @@
 package it.cnr.anac.transparency.mcp_server.services;
 
 import it.cnr.anac.transparency.mcp_server.clients.ResultServiceClient;
+import it.cnr.anac.transparency.mcp_server.clients.RuleServiceClient;
 import it.cnr.anac.transparency.mcp_server.dto.PageResponse;
 import it.cnr.anac.transparency.mcp_server.dto.ResultShowDto;
 import it.cnr.anac.transparency.mcp_server.dto.RispostaPaginata;
@@ -25,7 +26,12 @@ import it.cnr.anac.transparency.mcp_server.mapper.DtoMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -33,6 +39,7 @@ public class ResultService {
 
     private final ConductorService conductorService;
     private final ResultServiceClient resultServiceClient;
+    private final RuleServiceClient ruleServiceClient;
     private final DtoMapper dtoMapper;
 
     @Value("${result-service.max-results}")
@@ -49,26 +56,31 @@ public class ResultService {
 
 
     private String getResoconto(RispostaPaginata<RisultatoValidazioneRegola> results) {
-        long validResults = 0;
-        long notFoundResults = 0;
-        long otherResults = 0;
-        for (RisultatoValidazioneRegola r : results.getContenuto()) {
-            if (r.stato() >= 200 && r.stato() <=299) {
-                validResults += 1;
-            }
-            else if (r.stato() >= 400 && r.stato() <=499) {
-                notFoundResults += 1;
-            } else {
-                otherResults = otherResults++;
-            }
-        };
-        String resoconto = String.format("%d su %d sezioni sono correttamente pubblicate (stato 200 o 202). "
-                        + "%d sezioni sono mancanti (stato 400 o 404)",
-                validResults, results.getNumeroDiElementi(), notFoundResults);
-        if (otherResults > 0) {
-            resoconto += String.format(" Inoltre sono presenti %d sezioni problematiche con stato maggiore o uguale a 500.",
-                    otherResults);
-        }
-        return resoconto;
+        Integer numeroTotaleRegole = results.getContenuto()
+                .stream()
+                .findAny()
+                .map(risultatoValidazioneRegola ->
+                        resultServiceClient.listWorkflow(risultatoValidazioneRegola.workflowId(), null, null)
+                                .content()
+                                .stream()
+                                .findAny()
+                                .map(workflowDto -> ruleServiceClient.count(workflowDto.rootRule()))
+                                .orElse(results.getNumeroDiElementi()))
+                .orElse(results.getNumeroDiElementi());
+
+        Map<HttpStatus.Series, Long> conteggioPerSerie = results.getContenuto()
+                .stream()
+                .collect(Collectors.groupingBy(
+                        r -> Optional.ofNullable(HttpStatus.Series.resolve(r.stato()))
+                                .orElse(HttpStatus.Series.SERVER_ERROR),
+                        Collectors.counting()));
+
+        long validResults = conteggioPerSerie.getOrDefault(HttpStatus.Series.SUCCESSFUL, 0L);
+        long notFoundResults = numeroTotaleRegole - validResults;
+
+        return String.format(
+                "%d su %d sezioni sono correttamente pubblicate (stato 200 o 202). "
+                        + "%d sezioni sono mancanti (stato 400 o 404 o 500)",
+                validResults, numeroTotaleRegole, notFoundResults);
     }
 }

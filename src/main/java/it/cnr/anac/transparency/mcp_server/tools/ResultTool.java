@@ -29,6 +29,7 @@ import org.springaicommunity.mcp.annotation.McpToolParam;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -38,7 +39,7 @@ public class ResultTool {
     private final ResultService resultService;
 
     @McpTool(
-            name = "Ultimi risultati controllo trasparenza",
+            name = "ultimi-risultati-controllo-trasparenza",
             description =
                     "Recupera i risultati (paginati) dei controlli TrasparenzAI per la sezione 'Amministrazione trasparente' "
                             + "di una pubblica amministrazione (PA) identificata da codice IPA, in attuazione del D.Lgs. 33/2013.\n"
@@ -102,7 +103,7 @@ public class ResultTool {
 
         RispostaPaginata<RisultatoValidazioneRegola> results = resultService.getLastResult(codiceIpa, page);
         log.info("Call lastResult with codiceIpa: {}, page: {}, found {} elementi. Recap: {}",
-                codiceIpa, page, results.getNumeroDiElementi(), results.getResoconto());
+                codiceIpa, Optional.ofNullable(page).map(i -> i++).orElse(1), results.getNumeroDiElementi(), results.getResoconto());
         return results;
     }
 
